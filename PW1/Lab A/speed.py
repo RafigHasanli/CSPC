@@ -22,8 +22,8 @@ def benchmark():
     speedup = t_loop / t_numpy
 
     print(f"simulate_loop (pure Python) : {t_loop:.4f} s")
-    print(f"simulate      (NumPy)       : {t_numpy:.4f} s")
+    print(f"simulate      (NumPy)       : {t_numpy:.6f} s")
     print(f"Speed-up factor             : {speedup:.1f}x faster")
 
 if __name__ == "__main__":
-    benchmark()
+    benchmark() 
