@@ -6,6 +6,7 @@ Create the environment for a given lab:
 ```bash
 conda env create -f "PW1/Lab A/environment.yml"
 conda activate cspc
+```
 
 ##PW1 - Lab A: Reproducible Foundations
 What I built:
@@ -35,8 +36,19 @@ What I built:
 - Wrote a declarative `Snakefile` workflow to automate figure generation.
 
 Data & Comparison:
-- The observed data points closely follow the theoretical exponential decay law $N(t) = N_0 e^{-\lambda t}$ with $\lambda = 0.3$.
+- The observed data points closely follow the theoretical exponential decay law N(t) = N0 * e^(-λt) with λ = 0.3.
 - Random counting fluctuations (noise) are evident in the experimental observation scatter, but the overall rate, curvature, and asymptotic trend align with the analytical curve.
 
 Snakemake Automation:
 - The Snakemake pipeline defines a rule mapping `decay_observed.csv` and `plot.py` to `figure.png`. It monitors file modification timestamps, executing only when inputs are modified or when `figure.png` is absent, eliminating redundant re-computation.
+
+---
+
+## PW2 - Lab A: Motion from Tracking Data
+
+What I built:
+- analysis.py was created and it prints out mean acceleration and standard deviation of acceleration. Mean acceleration=-8.57968750000008 Std=28.71612572170628. 
+The reason for these results is that acceleration is much noisier than position because each derivative subtracts nearby noisy measurements and divides by the small time step (0.1 s), so the noise is magnified, and it happens twice.
+
+- Integrating the noisy acceleration back to velocity and then position gave a result within 0.78 m of the original position (max difference). Integration suppresses noise because random errors partly cancel when summed.
+- Figure: motion.png shows smooth position, slightly rough velocity, and very noisy acceleration.
