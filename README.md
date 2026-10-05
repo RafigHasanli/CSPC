@@ -52,3 +52,9 @@ The reason for these results is that acceleration is much noisier than position 
 
 - Integrating the noisy acceleration back to velocity and then position gave a result within 0.78 m of the original position (max difference). Integration suppresses noise because random errors partly cancel when summed.
 - Figure: motion.png shows smooth position, slightly rough velocity, and very noisy acceleration.
+
+Bonus: 2D trajectory (trajectory.csv)
+- The path (x vs y) is a figure-eight that crosses itself near the origin, spanning about ±50 m in both x and y, with small wiggles from measurement noise.
+- The speed, computed as sqrt(vx² + vy²) from np.gradient of x and y, oscillates repeatedly between about 8 and 38 m/s, with a period of roughly 5 s. It looks fastest around the crossing in the middle of the eight and slowest near the outer ends of the loops.
+- The speed curve is much jerkier than the path, because it comes from a derivative and differentiation amplifies noise, the same effect as in the free-fall data.
+- Figure: trajectory.png.
