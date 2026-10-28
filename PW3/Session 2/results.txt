@@ -1,0 +1,12 @@
+Welch t= -7.857935605524213 p= 9.106165923728838e-14
+Mann-Whitney U= 5806.5 p= 1.8610146112914352e-13
+disease n= 139 mean= 139.25899280575538 SEM= 1.9163330086200157 CI95=+- 3.7560126968952305
+healthy n= 164 mean= 158.3780487804878 SEM= 1.4991962654873978 CI95=+- 2.9384246803552996
+age-thalach Pearson r= -0.39380580598682097 p= 1.1092756352878018e-12 | Spearman rho= -0.3916331730589052 p= 1.5108590921864765e-12
+NAIVE corr with malignancy: {'benzene': np.float64(0.385), 'cadmium': np.float64(0.88)}
+pollution corr with: {'benzene': np.float64(0.054), 'cadmium': np.float64(0.982), 'malignancy': np.float64(0.895)}
+RESTRICTED (pollution 40-60th percentile) n= 200 {'benzene': np.float64(0.697), 'cadmium': np.float64(0.309)}
+per-bin corr benzene [np.float64(0.668), np.float64(0.74), np.float64(0.697), np.float64(0.71), np.float64(0.711)]
+per-bin corr cadmium [np.float64(0.283), np.float64(0.273), np.float64(0.309), np.float64(0.256), np.float64(0.188)]
+PARTIAL corr (controlling pollution): {'benzene': np.float64(0.755), 'cadmium': np.float64(0.013)}
+target proportions: {0: 0.541, 1: 0.459} entropy H(bits)= 0.9950837594929733

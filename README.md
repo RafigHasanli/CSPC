@@ -116,3 +116,50 @@ The reason for these results is that acceleration is much noisier than position 
 - thalach: the low end of the Q-Q plot falls below the line (heavy left tail). It is the closest to normal of the three rejected variables, but I still treat it as not normal.
 
 **Consequence for Session 2:** I will use non-parametric methods (Mann-Whitney U, Spearman) for chol, trestbps and thalach. With about 300 patients a t-test on age would also be reasonable.
+
+
+---
+
+## PW3 - Session 2: Drawing Conclusions
+
+**What I built:**
+- `PW3/Session 2/session2.py` runs the whole of Session 2 and writes all numbers to `results.txt`. `heart.csv` was rebuilt from `processed.cleveland.data` exactly as in Session 1 (`target = 1` for any disease level above 0). The chemical-exposure dataset is `chemicals_cancer.csv` (1000 patients: benzene, cadmium, pollution_index, age, malignancy).
+- Figures: `thalach_means.png` (mean thalach with 95% CI), `age_thalach.png` (scatter) and `chemicals.png` (malignancy vs benzene and vs cadmium, coloured by pollution).
+
+**4. Is the effect real? (thalach, disease vs healthy)**
+- Method: thalach is not normal (Session 1), so I used the Mann-Whitney U test, which compares the two groups without assuming normality. As a cross-check I also ran Welch's t-test, which does not assume equal variances.
+- Result: U = 5806.5, p = 1.9e-13 (Welch: t = -7.86, p = 9.1e-14). The p-value is far below 0.05, so I reject "same distribution": the two groups differ.
+- Effect size: the mean difference is 19.1 bpm. The chance that a random disease patient has a higher thalach than a random healthy patient is U / (n1 n2) = 0.25, so most of the time the disease patient is lower.
+- Conclusion: patients with heart disease reach a significantly lower maximum heart rate than healthy ones. Both tests agree.
+
+**Mean with uncertainty (95% confidence interval = mean ± 1.96 × SEM, SEM = s / sqrt(n)):**
+
+| group | n | mean thalach (bpm) | SEM | 95% CI |
+|---|---|---|---|---|
+| disease | 139 | 139.3 | 1.92 | 135.5 to 143.0 |
+| healthy | 164 | 158.4 | 1.50 | 155.4 to 161.3 |
+
+- The plot shows the two means with the 95% CI as error bars. The intervals do not overlap (143.0 < 155.4), so the picture agrees with the test. The CI of a mean is reliable here even though thalach is not perfectly normal, because both groups have well over 100 patients.
+
+**5. Do age and thalach move together?**
+- thalach is not normal, so I used the Spearman rank correlation: rho = -0.39, p = 1.5e-12. Pearson gives the same answer (r = -0.39, p = 1.1e-12).
+- Interpretation: older patients tend to reach a lower maximum heart rate. The relationship is moderate (about 15% of the variance), and the scatter plot shows a clear downward trend with a lot of spread around it.
+
+**6. Naive analysis (chemicals)**
+- Correlation with malignancy: cadmium r = 0.88, benzene r = 0.385. Taken at face value, cadmium looks like the cause.
+
+**7. Look again (confounding)**
+- Suspected third variable: pollution_index. It correlates with cadmium at r = 0.98 and with malignancy at r = 0.90, but almost not at all with benzene (r = 0.05). So pollution moves with both cadmium and malignancy, which is what a confounder does.
+- I recomputed the associations in three ways: restricting to patients with similar pollution (40th to 60th percentile, n = 200), splitting into 5 pollution bins, and a partial correlation (removing the linear effect of pollution from both variables).
+
+| chemical | naive r | restricted (similar pollution) | per-bin range | partial r |
+|---|---|---|---|---|
+| benzene | 0.385 | 0.70 | 0.67 to 0.74 | 0.76 |
+| cadmium | 0.88 | 0.31 | 0.19 to 0.31 | 0.01 |
+
+- Benzene is the real cause of malignancy. Its association gets stronger once pollution is held fixed, and it stays at about 0.7 in every bin. Pollution was adding variation to malignancy that benzene does not explain, which hid benzene's effect in the naive analysis.
+- Cadmium only looked guilty. It follows pollution almost perfectly, so it acted as a proxy for it. When pollution is accounted for, its association falls from 0.88 to about 0 (partial r = 0.01). The restricted value of 0.31 is not zero only because the 40-60 percentile window still contains some pollution variation; the partial correlation removes that.
+- This shows the difference between correlation and causation: the strongest correlation (cadmium) was not the cause, and the weaker one (benzene) was. The conclusion rests on this dataset and on one controlled variable (pollution), but the result is consistent across all three methods.
+
+**Bonus: how unpredictable is the target?**
+- Proportions: 54.1% healthy (0), 45.9% disease (1). Shannon entropy H = -sum(p log2 p) = 0.995 bits, where 1 bit is the maximum for two categories. The column is almost perfectly balanced, so it is about as hard to guess as a binary column can be (always guessing "healthy" is right only 54% of the time).
